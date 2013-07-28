@@ -1,16 +1,15 @@
 # capistrano-shared-file
-
-A Capistrano recipe to upload/download configuration files like `config/database.yml` or `config/application.yml` to/from your remote servers. Heavily inspired by teohm's [capistrano-shared_file] gem.
+A Capistrano recipe to upload, download and symlink configuration files like `config/database.yml` or `config/application.yml` to or from your remote servers. Heavily inspired by teohm's [capistrano-shared_file](https://github.com/teohm/capistrano-shared_file) gem.
 
 ## Install
 
     gem install capistrano-shared-file
 
-For Bundler, add this to your <tt>Gemfile</tt>:
+For Bundler, add this to your `Gemfile`:
 
     gem 'capistrano-shared-file'
 
-## Using
+## Usage
 
 Add the following lines to `config/deploy.rb`:
 
@@ -19,15 +18,15 @@ Add the following lines to `config/deploy.rb`:
 
 ## Tasks
 
-To upload all the files defined in `shared_files` capistrano variables to a remote server, you can simply execute:
+To upload all the files defined in the `shared_files` capistrano variable to a remote server, you can simply execute:
 
     bundle exec cap shared_file:upload
 
-To download all the files defined in `shared_files` capistrano variables from a remote server, you can simply execute:
+To download all the files defined in the `shared_files` capistrano variable from a remote server, you can simply execute:
 
     bundle exec cap shared_file:download
 
-Note: You can use it together with `capistrano/ext/multistage` like:
+**Note**: You can use it together with `capistrano/ext/multistage` like:
 
     bundle exec cap <STAGE> shared_file:upload
     bundle exec cap <STAGE> shared_file:download
