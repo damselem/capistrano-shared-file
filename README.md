@@ -20,15 +20,23 @@ Add the following lines to `config/deploy.rb`:
 
 ### Upload
 
-To upload all the files defined in the `shared_files` capistrano variable to a remote server, you can simply execute:
+To upload all the files defined in the `shared_files` capistrano variable to a remote server, you can execute:
 
     bundle exec cap shared_file:upload
 
 ### Download
 
-To download all the files defined in the `shared_files` capistrano variable from a remote server, you can simply execute:
+To download all the files defined in the `shared_files` capistrano variable from a remote server, you can execute:
 
     bundle exec cap shared_file:download
+    
+### Symlink
+
+To symlink the uploaded configuration files to the current release path, you can execute:
+
+    bundle exec cap shared_file:symlink
+    
+This task will be executed on every deploy. If you happen to make any changes in the files specified in the `shared_files` capistrano variable, make sure you upload them.
 
 **Note**: You can use it together with `capistrano/ext/multistage` like:
 
