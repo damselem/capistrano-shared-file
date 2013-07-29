@@ -18,9 +18,13 @@ Add the following lines to `config/deploy.rb`:
 
 ## Tasks
 
+### Upload
+
 To upload all the files defined in the `shared_files` capistrano variable to a remote server, you can simply execute:
 
     bundle exec cap shared_file:upload
+
+### Download
 
 To download all the files defined in the `shared_files` capistrano variable from a remote server, you can simply execute:
 
