@@ -22,7 +22,7 @@ Capistrano::Configuration.instance.load do
         run "#{try_sudo} chmod g+w #{remote_path_to(File.dirname(file))}" if fetch(:group_writable, true)
       end
     end
-    after 'deploy:setup', 'shared_file:setup.'
+    after 'deploy:setup', 'shared_file:setup'
 
     desc 'Upload shared files to server'
     task :upload, :except => { :no_release => true } do
