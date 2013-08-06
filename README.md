@@ -26,7 +26,7 @@ To upload all the files defined in the `shared_files` capistrano variable to a r
 
 With backup (locally):
 
-    bundle exec cap shared_file:upload[-b]
+    bundle exec cap shared_file:upload -s backup=true
 
 ### Download
 
@@ -36,7 +36,7 @@ To download all the files defined in the `shared_files` capistrano variable from
 
 With backup (locally):
 
-    bundle exec cap shared_file:download[-b]
+    bundle exec cap shared_file:download -s backup=true
     
 ### Symlink
 
