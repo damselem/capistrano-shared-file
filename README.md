@@ -24,11 +24,19 @@ To upload all the files defined in the `shared_files` capistrano variable to a r
 
     bundle exec cap shared_file:upload
 
+With backup (locally):
+
+    bundle exec cap shared_file:upload[-b]
+
 ### Download
 
 To download all the files defined in the `shared_files` capistrano variable from a remote server, you can execute:
 
     bundle exec cap shared_file:download
+
+With backup (locally):
+
+    bundle exec cap shared_file:download[-b]
     
 ### Symlink
 
