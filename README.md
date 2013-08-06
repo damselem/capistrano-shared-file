@@ -24,7 +24,7 @@ To upload all the files defined in the `shared_files` capistrano variable to a r
 
     bundle exec cap shared_file:upload
 
-With backup (locally):
+With backup (locally - will create a backup for each shared file in the same directory as the original, with a timestamp):
 
     bundle exec cap shared_file:upload -s backup=true
 
@@ -34,7 +34,7 @@ To download all the files defined in the `shared_files` capistrano variable from
 
     bundle exec cap shared_file:download
 
-With backup (locally):
+With backup (locally - will create a backup for each shared file in the same directory as the original, with a timestamp):
 
     bundle exec cap shared_file:download -s backup=true
     
