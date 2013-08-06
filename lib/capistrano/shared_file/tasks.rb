@@ -8,9 +8,14 @@ Capistrano::Configuration.instance.load do
 
   _cset :shared_files,    %w(config/database.yml)
   _cset :shared_file_dir, 'files'
+  _cset :backup,          false
 
   def remote_path_to(file)
     File.join(shared_path, shared_file_dir, file)
+  end
+
+  def backup_path_to(file)
+    File.join(File.dirname(file), "#{Time.now.strftime('%Y%m%dT%H%M%S')}_#{File.basename(file)}")
   end
 
   namespace :shared_file do
@@ -27,6 +32,9 @@ Capistrano::Configuration.instance.load do
     desc 'Upload shared files to server'
     task :upload, :except => { :no_release => true } do
       shared_files.each do |file|
+        if backup
+          top.download(remote_path_to(file), backup_path_to(file), :via => :scp)
+        end
         top.upload(file, remote_path_to(file), :via => :scp)
       end
     end
@@ -34,6 +42,9 @@ Capistrano::Configuration.instance.load do
     desc 'Download shared files from server.'
     task :download, :except => { :no_release => true } do
       shared_files.each do |file|
+        if backup
+          run_locally "cp #{file} #{backup_path_to(file)}"
+        end
         top.download(remote_path_to(file), file, :via => :scp)
       end
     end
