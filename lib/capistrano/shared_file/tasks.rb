@@ -14,6 +14,10 @@ Capistrano::Configuration.instance.load do
     File.join(shared_path, shared_file_dir, file)
   end
 
+  def backup_path_to(file)
+    File.join(File.dirname(file), "#{Time.now.strftime('%Y%m%dT%H%M%S')}_#{File.basename(file)}")
+  end
+
   namespace :shared_file do
 
     desc 'Generate remote directories for shared files.'
@@ -29,8 +33,7 @@ Capistrano::Configuration.instance.load do
     task :upload, :except => { :no_release => true } do
       shared_files.each do |file|
         if backup
-          backup_file = "#{File.dirname(file)}/#{Time.now.strftime('%Y%m%dT%H%M%S')}_#{File.basename(file)}"
-          top.download(remote_path_to(file), backup_file, :via => :scp)
+          top.download(remote_path_to(file), backup_path_to(file), :via => :scp)
         end
         top.upload(file, remote_path_to(file), :via => :scp)
       end
@@ -40,8 +43,7 @@ Capistrano::Configuration.instance.load do
     task :download, :except => { :no_release => true } do
       shared_files.each do |file|
         if backup
-          backup_file = "#{File.dirname(file)}/#{Time.now.strftime('%Y%m%dT%H%M%S')}_#{File.basename(file)}"
-          run_locally   "cp #{file} #{backup_file}"
+          run_locally "cp #{file} #{backup_path_to(file)}"
         end
         top.download(remote_path_to(file), file, :via => :scp)
       end
