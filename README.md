@@ -59,6 +59,14 @@ Enbales backups of your shared files when uploading and downloading shared files
 
 For more details on the implications of setting this variable to `true`, refer to the next **Upload** and **Download** sections.
 
+### shared_file_show_upload_diff
+
+When set, you will be prompted with the diff of any files that are changing due to your shared_file:upload. By default:
+
+    set :shared_file_show_upload_diff, true
+
+For more details on the implications of setting this variable to `true`, refer to the next **Upload** section.
+
 ## Tasks
 
 ### Upload
@@ -70,6 +78,10 @@ To upload all the files defined in the `shared_files` capistrano variable to a r
 With backup (it creates a backup of the remote shared files on your machine before uploading the new versions to the remote machine):
 
     bundle exec cap shared_file:upload -S shared_file_backup=true
+
+With show upload diff (downloads the existing file and displays the diff, prompting you to accept the changes):
+
+    bundle exec cap shared_file:upload -S shared_file_show_upload_diff=true
 
 ### Download
 
