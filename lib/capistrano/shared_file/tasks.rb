@@ -6,9 +6,10 @@ end
 
 Capistrano::Configuration.instance.load do
 
-  _cset :shared_files,       %w(config/database.yml)
-  _cset :shared_file_dir,    'files'
-  _cset :shared_file_backup, false
+  _cset :shared_files,                 %w(config/database.yml)
+  _cset :shared_file_dir,              'files'
+  _cset :shared_file_backup,           false
+  _cset :shared_file_show_upload_diff, false
 
   def remote_path_to(file)
     File.join(shared_path, shared_file_dir, file)
@@ -32,8 +33,23 @@ Capistrano::Configuration.instance.load do
     desc 'Upload shared files to server'
     task :upload, :except => { :no_release => true } do
       shared_files.each do |file|
-        if shared_file_backup
-          top.download(remote_path_to(file), backup_path_to(file), :via => :scp)
+        if shared_file_backup || shared_file_show_upload_diff
+          backup_file = backup_path_to(file)
+          top.download(remote_path_to(file), backup_file, :via => :scp)
+          if shared_file_show_upload_diff
+            diff_result = `diff #{backup_file} #{file}`
+            File.unlink(backup_file) unless shared_file_backup
+            unless $?.success?
+              puts "Showing diff for #{file}:"
+              puts diff_result
+              puts "Are you sure that you want to upload your changes to #{file} (y/n)?"
+              result = gets.chomp.downcase
+              unless result == 'y'
+                puts "no changes made to #{file}"
+                next
+              end
+            end
+          end
         end
         top.upload(file, remote_path_to(file), :via => :scp)
       end
