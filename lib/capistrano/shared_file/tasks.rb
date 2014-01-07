@@ -39,12 +39,11 @@ Capistrano::Configuration.instance.load do
           if shared_file_show_upload_diff
             diff_result = `diff #{backup_file} #{file}`
             File.unlink(backup_file) unless shared_file_backup
-            unless $?.success?
+            unless $CHILD_STATUS.success?
               puts "Showing diff for #{file}:"
               puts diff_result
-              puts "Are you sure that you want to upload your changes to #{file} (y/n)?"
-              result = gets.chomp.downcase
-              unless result == 'y'
+              result = Capistrano::CLI.ui.ask('Are you sure that you want to upload your changes to #{file} (y/n)?', ['y','n'])
+              if result == 'n'
                 puts "no changes made to #{file}"
                 next
               end
