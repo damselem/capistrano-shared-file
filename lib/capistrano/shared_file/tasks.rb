@@ -25,7 +25,7 @@ Capistrano::Configuration.instance.load do
     unless $?.success?
       puts "Showing diff for #{file}:"
       puts diff_result
-      result = Capistrano::CLI.ui.ask('Are you sure that you want to upload your changes to #{file} (y/n)?', ['y','n'])
+      result = Capistrano::CLI.ui.ask("Are you sure that you want to upload your changes to #{file} (y/n)?", ['y','n'])
       return (result == 'y')
     end
   end
