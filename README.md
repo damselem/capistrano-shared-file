@@ -63,7 +63,7 @@ For more details on the implications of setting this variable to `true`, refer t
 
 When set, you will be prompted with the diff of any files that are changing due to your shared_file:upload. By default:
 
-    set :shared_file_show_upload_diff, false
+    set :shared_file_show_upload_diff, true
 
 For more details on the implications of setting this variable to `true`, refer to the next **Upload** section.
 

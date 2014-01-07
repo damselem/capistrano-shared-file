@@ -9,7 +9,7 @@ Capistrano::Configuration.instance.load do
   _cset :shared_files,                 %w(config/database.yml)
   _cset :shared_file_dir,              'files'
   _cset :shared_file_backup,           false
-  _cset :shared_file_show_upload_diff, false
+  _cset :shared_file_show_upload_diff, true
 
   def remote_path_to(file)
     File.join(shared_path, shared_file_dir, file)
@@ -17,6 +17,17 @@ Capistrano::Configuration.instance.load do
 
   def backup_path_to(file)
     File.join(File.dirname(file), "#{Time.now.strftime('%Y%m%dT%H%M%S')}_#{File.basename(file)}")
+  end
+
+  def confirm_upload_is_desired(backup_file, file)
+    diff_result = `git diff --no-index --color=always --ignore-space-at-eol #{backup_file} #{file}`
+    File.unlink(backup_file) unless shared_file_backup
+    unless $?.success?
+      puts "Showing diff for #{file}:"
+      puts diff_result
+      result = Capistrano::CLI.ui.ask('Are you sure that you want to upload your changes to #{file} (y/n)?', ['y','n'])
+      return (result == 'y')
+    end
   end
 
   namespace :shared_file do
@@ -37,20 +48,11 @@ Capistrano::Configuration.instance.load do
           backup_file = backup_path_to(file)
           top.download(remote_path_to(file), backup_file, :via => :scp)
           if shared_file_show_upload_diff
-            diff_result = `diff #{backup_file} #{file}`
-            File.unlink(backup_file) unless shared_file_backup
-            unless $CHILD_STATUS.success?
-              puts "Showing diff for #{file}:"
-              puts diff_result
-              result = Capistrano::CLI.ui.ask('Are you sure that you want to upload your changes to #{file} (y/n)?', ['y','n'])
-              if result == 'n'
-                puts "no changes made to #{file}"
-                next
-              end
-            end
+            should_upload = confirm_upload_is_desired(backup_file, file)
+            puts "No changes made to #{file}!"
           end
         end
-        top.upload(file, remote_path_to(file), :via => :scp)
+        top.upload(file, remote_path_to(file), :via => :scp) if !shared_file_show_upload_diff || should_upload
       end
     end
 
